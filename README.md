@@ -1,10 +1,10 @@
-# Biên Bản AI
+# Họp Xong
 
-**Ghi lại cuộc họp. Chắt lọc quyết định. Theo dõi đến khi hoàn thành.**
+**Họp xong là có biên bản.**
 
-Biên Bản AI là không gian làm việc sau cuộc họp dành cho cá nhân, quản lý và
-đội ngũ. Sản phẩm chuyển nội dung nói hoặc văn bản thành biên bản có cấu trúc,
-giúp mọi người nắm nhanh điều đã thống nhất và biết chính xác việc cần làm tiếp.
+Họp Xong ghi âm cuộc họp hoặc nhận nội dung văn bản, sau đó dùng AI tạo báo cáo
+có cấu trúc. Người dùng nắm nhanh điều đã thống nhất, việc cần làm tiếp và người
+chịu trách nhiệm mà không phải ngồi viết lại biên bản.
 
 ## Giá trị chính
 

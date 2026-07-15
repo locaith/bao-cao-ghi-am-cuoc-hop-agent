@@ -16,7 +16,7 @@ try {
   if (-not (Test-Path (Join-Path $backend ".env"))) {
     Copy-Item (Join-Path $backend ".env.example") (Join-Path $backend ".env")
   }
-  Write-Host "Biên Bản AI đã sẵn sàng. Điền biến môi trường, sau đó khởi động các dịch vụ của dự án."
+  Write-Host "Hop Xong da san sang. Dien bien moi truong, sau do khoi dong cac dich vu cua du an."
 } finally {
   Pop-Location
 }

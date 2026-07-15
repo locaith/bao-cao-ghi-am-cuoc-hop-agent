@@ -1,5 +1,5 @@
 {
-  "name": "Biên Bản AI",
+  "name": "Họp Xong",
   "description": "Ghi âm hoặc nhận nội dung cuộc họp, tóm tắt bằng AI và theo dõi đầu việc sau họp.",
   "requestFramePermissions": [
     "microphone"
