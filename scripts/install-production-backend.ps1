@@ -1,4 +1,4 @@
-param(
+﻿param(
   [string]$TargetRoot = 'C:\locaith\bao-cao-ghi-am-cuoc-hop-agent',
   [string]$RepositoryUrl = 'https://github.com/locaith/bao-cao-ghi-am-cuoc-hop-agent.git',
   [string]$Branch = 'main'

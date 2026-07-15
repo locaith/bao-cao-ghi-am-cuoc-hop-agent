@@ -1,4 +1,4 @@
-$ErrorActionPreference = "Stop"
+﻿$ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $PSScriptRoot
 $utf8 = [System.Text.UTF8Encoding]::new($false, $true)
 $extensions = @(".ts", ".tsx", ".css", ".json", ".md", ".py", ".sql", ".ps1", ".example")
