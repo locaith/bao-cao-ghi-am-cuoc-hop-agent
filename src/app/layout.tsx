@@ -2,8 +2,8 @@ import type {Metadata} from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'MemoAI — Biên bản họp thành hành động',
-  description: 'Ghi âm, tóm tắt và theo dõi đầu việc sau cuộc họp bằng AI.',
+  title: 'Biên Bản AI — Ghi âm, tóm tắt và giao việc',
+  description: 'Biến nội dung cuộc họp thành tóm tắt, quyết định và đầu việc có thể theo dõi bằng AI.',
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {

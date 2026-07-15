@@ -16,7 +16,7 @@ try {
   if (-not (Test-Path (Join-Path $backend ".env"))) {
     Copy-Item (Join-Path $backend ".env.example") (Join-Path $backend ".env")
   }
-  Write-Host "MemoAI đã sẵn sàng. Điền API vào .env.local và backend/.env, sau đó chạy scripts/start-backend.ps1 và npm run dev."
+  Write-Host "Biên Bản AI đã sẵn sàng. Điền biến môi trường, sau đó khởi động các dịch vụ của dự án."
 } finally {
   Pop-Location
 }

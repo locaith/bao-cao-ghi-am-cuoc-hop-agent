@@ -1,234 +1,70 @@
-# MemoAI — Biên bản họp thành hành động
+# Biên Bản AI
 
-MemoAI ghi âm hoặc nhận transcript cuộc họp, dùng Google Gemini để tạo tóm tắt điều hành, các quyết định quan trọng và danh sách đầu việc. Sản phẩm được thiết kế theo mô hình frontend cloud + backend AI tự host + Supabase.
+**Ghi lại cuộc họp. Chắt lọc quyết định. Theo dõi đến khi hoàn thành.**
 
-## Trạng thái production
+Biên Bản AI là không gian làm việc sau cuộc họp dành cho cá nhân, quản lý và
+đội ngũ. Sản phẩm chuyển nội dung nói hoặc văn bản thành biên bản có cấu trúc,
+giúp mọi người nắm nhanh điều đã thống nhất và biết chính xác việc cần làm tiếp.
 
-| Thành phần | Công nghệ | Địa chỉ đề xuất |
-| --- | --- | --- |
-| Frontend | Next.js 15, Vercel | `https://meeting.locaith.com` |
-| Vercel mặc định | Vercel project | `https://bao-cao-ghi-am-cuoc-hop-agent.vercel.app` |
-| Backend AI | FastAPI, máy Locaith | `https://meeting-api.locaith.com` |
-| Backend local | Uvicorn | `http://127.0.0.1:18771` |
-| Database/Auth | Supabase PostgreSQL + Google OAuth | Supabase Cloud |
+## Giá trị chính
 
-> `meeting.locaith.com` phải trỏ tới Vercel. Chỉ `meeting-api.locaith.com` đi qua Cloudflare Tunnel về máy local.
+- Ghi âm trực tiếp cuộc họp bằng microphone trên trình duyệt.
+- Nhận transcript, ghi chú hoặc nội dung thảo luận được dán vào hệ thống.
+- Tạo tóm tắt điều hành ngắn gọn bằng AI.
+- Trích xuất các điểm chính và quyết định quan trọng.
+- Nhận diện đầu việc, người phụ trách, hạn hoàn thành và mức ưu tiên.
+- Lưu trữ biên bản theo từng tài khoản.
+- Tìm kiếm lại lịch sử cuộc họp.
+- Theo dõi và cập nhật trạng thái đầu việc tập trung.
+- Xuất biên bản thành PDF để lưu trữ hoặc chia sẻ.
 
-## Tính năng
+## Quy trình sử dụng
 
-- Ghi âm cuộc họp trực tiếp trong trình duyệt hoặc dán transcript.
-- Gemini structured output tạo tiêu đề, tóm tắt, điểm chính, đề xuất và đầu việc.
-- Thư viện biên bản, tìm kiếm, trạng thái công việc và xuất PDF.
-- Google OAuth qua Supabase.
-- Row Level Security: mỗi người chỉ đọc/ghi dữ liệu của chính mình.
-- Quota atomic theo tháng: Free 5, Pro 100, Team 500 lượt.
-- Quy trình yêu cầu nâng cấp tài khoản, sẵn sàng nối PayOS/Stripe sau này.
-- Backend giữ Google API key và Supabase service role; secret không nằm trong bundle Vercel.
-- UTF-8 tiếng Việt, responsive desktop/mobile và accessibility cơ bản.
+1. Đăng nhập bằng tài khoản Google.
+2. Bắt đầu ghi âm hoặc dán nội dung cuộc họp.
+3. AI biên soạn tóm tắt, điểm chính, đề xuất và đầu việc.
+4. Biên bản được lưu tự động vào thư viện của tài khoản.
+5. Người dùng theo dõi đầu việc cho đến khi hoàn thành.
 
-## Kiến trúc
+## Không gian sản phẩm
 
-```text
-Người dùng
-   │
-   ├── meeting.locaith.com / Vercel
-   │        ├── Supabase Auth
-   │        └── Supabase REST/RLS ── PostgreSQL
-   │
-   └── meeting-api.locaith.com
-            │ Cloudflare Tunnel
-            ▼
-       127.0.0.1:18771 / FastAPI
-            ├── xác thực Supabase JWT
-            ├── quota PostgreSQL atomic
-            └── Google Gemini API
-```
+### Phòng họp
 
-Frontend Vercel không thể gọi `127.0.0.1` trên máy chủ. Biến production `NEXT_PUBLIC_API_BASE_URL` bắt buộc phải là URL HTTPS của tunnel.
+Ghi âm hoặc nhập văn bản, theo dõi thời lượng và gửi nội dung để tạo biên bản.
 
-## Yêu cầu
+### Thư viện biên bản
 
-- Node.js 20+
-- Python 3.11
-- Supabase project
-- Google AI Studio API key
-- Cloudflare Tunnel đang chạy trên máy backend
-- Vercel account kết nối GitHub
+Lưu toàn bộ lịch sử cuộc họp, tìm kiếm theo tiêu đề và xem lại nội dung chi tiết.
 
-## 1. Supabase
+### Theo dõi đầu việc
 
-1. Tạo Supabase project.
-2. Mở **SQL Editor** và chạy toàn bộ [`supabase/schema.sql`](supabase/schema.sql).
-3. Vào **Authentication → Providers → Google** và bật Google provider.
-4. Trong **Authentication → URL Configuration**:
-   - Site URL: `https://meeting.locaith.com`
-   - Redirect URLs:
-     - `http://localhost:3000/**`
-     - `https://bao-cao-ghi-am-cuoc-hop-agent.vercel.app/**`
-     - `https://meeting.locaith.com/**`
-5. Lấy Project URL, anon key và service role key trong **Project Settings → API**.
+Tập hợp công việc từ mọi cuộc họp trong một danh sách, kèm người phụ trách,
+hạn chót, mức ưu tiên và trạng thái hoàn thành.
 
-Không đưa service role key vào frontend hoặc Vercel.
+### Gói tài khoản
 
-## 2. Biến môi trường local
+- **Khởi động:** 5 biên bản mỗi tháng.
+- **Chuyên nghiệp:** 100 biên bản mỗi tháng.
+- **Đội ngũ:** 500 biên bản mỗi tháng.
 
-Frontend — `.env.local`:
+Người dùng có thể gửi yêu cầu nâng cấp trực tiếp trong sản phẩm.
 
-```dotenv
-NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
-NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:18771
-```
+## Nguyên tắc dữ liệu
 
-Backend — `backend/.env`:
+- Không hiển thị dữ liệu mẫu thay cho dữ liệu người dùng.
+- Dữ liệu cuộc họp được tách biệt theo từng tài khoản.
+- Nội dung AI không tự bổ sung người phụ trách, con số hoặc quyết định không có
+  trong cuộc họp.
+- Âm thanh chỉ được gửi để phân tích và không được lưu mặc định.
+- Khóa truy cập dịch vụ AI không xuất hiện trong ứng dụng phía người dùng.
 
-```dotenv
-GOOGLE_API_KEY=YOUR_GOOGLE_AI_STUDIO_KEY
-GOOGLE_MODEL=gemini-2.5-flash
-SUPABASE_URL=https://YOUR_PROJECT.supabase.co
-SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
-SUPABASE_SERVICE_ROLE_KEY=YOUR_SUPABASE_SERVICE_ROLE_KEY
-FRONTEND_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,https://bao-cao-ghi-am-cuoc-hop-agent.vercel.app,https://meeting.locaith.com
-PORT=18771
-ALLOW_DEMO_MODE=false
-```
+## Đối tượng phù hợp
 
-Hai file thật đã được `.gitignore`; chỉ các file `*.example` được commit.
+- Chủ doanh nghiệp và quản lý cần theo dõi quyết định sau họp.
+- Nhóm dự án cần giao việc rõ ràng và tránh bỏ sót cam kết.
+- Chuyên gia tư vấn cần chuẩn hóa biên bản cho khách hàng.
+- Nhóm bán hàng, vận hành và sản phẩm có nhiều cuộc họp mỗi tuần.
 
-## 3. Chạy local
+---
 
-Khởi tạo một lần:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File ".\scripts\setup.ps1"
-```
-
-Mở hai PowerShell:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File ".\scripts\start-backend.ps1"
-```
-
-```powershell
-npm run dev
-```
-
-Địa chỉ kiểm tra:
-
-- Frontend: http://127.0.0.1:3000
-- Backend health: http://127.0.0.1:18771/health
-- OpenAPI docs: http://127.0.0.1:18771/docs
-
-## 4. Deploy frontend lên Vercel
-
-1. Mở `https://vercel.com/new` và import repository `locaith/bao-cao-ghi-am-cuoc-hop-agent`.
-2. Framework: **Next.js**; Root Directory để mặc định; không cấu hình Output Directory.
-3. Thêm ba Environment Variables cho Production, Preview và Development:
-
-```dotenv
-NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
-NEXT_PUBLIC_API_BASE_URL=https://meeting-api.locaith.com
-```
-
-4. Deploy và ghi nhận URL `*.vercel.app` thực tế.
-5. Trong Vercel **Project → Settings → Domains**, thêm `meeting.locaith.com`.
-6. Tại Cloudflare DNS, tạo CNAME `meeting` theo đúng target Vercel hiển thị khi Inspect Domain. Target phổ biến hiện tại là `cname.vercel-dns-0.com`; ưu tiên giá trị Vercel cấp cho project.
-7. Không thêm `meeting.locaith.com` vào file ingress tunnel.
-
-## 5. Backend production trên máy Locaith
-
-Production chạy từ SSD tại:
-
-```text
-C:\locaith\bao-cao-ghi-am-cuoc-hop-agent
-```
-
-Cài hoặc cập nhật checkout production:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File ".\scripts\install-production-backend.ps1"
-```
-
-Sau lần đầu, điền secret tại:
-
-```text
-C:\locaith\bao-cao-ghi-am-cuoc-hop-agent\backend\.env
-```
-
-Backend MemoAI đã được thiết kế để watchdog chung giám sát. Lệnh tổng:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File "C:\locaith\locaith-ai-v2\backend\restart_all.ps1"
-```
-
-Lệnh này restart các backend hiện có, MemoAI `:18771` và Cloudflare Tunnel. Watchdog sẽ tự dựng lại MemoAI khi process chết.
-
-## 6. Cloudflare Tunnel
-
-Ingress production:
-
-```yaml
-- hostname: meeting-api.locaith.com
-  service: http://127.0.0.1:18771
-```
-
-Rule phải đứng trước `*.locaith.com` vì cloudflared khớp ingress từ trên xuống.
-
-Kiểm tra config và rule:
-
-```powershell
-cd C:\locaith\pdf_ocr_backend
-.\cloudflared.exe tunnel --config .\cloudflared.convert.config.yml ingress validate
-.\cloudflared.exe tunnel --config .\cloudflared.convert.config.yml ingress rule https://meeting-api.locaith.com/health
-```
-
-DNS wildcard hiện tại đã phủ `meeting-api.locaith.com`; không cần chạy thêm lệnh
-`cloudflared tunnel route dns`. Nếu thay đổi zone hoặc bỏ wildcard, hãy tạo bản ghi
-DNS trực tiếp trong Cloudflare Dashboard đúng zone `locaith.com`, rồi kiểm tra lại
-hostname trước khi restart tunnel.
-
-## 7. Kiểm tra trước khi release
-
-```powershell
-npm ci
-npm run lint
-npm run typecheck
-npm run build
-backend\.venv\Scripts\python.exe -m pytest backend\tests -q
-.\scripts\verify-utf8.ps1
-npm audit --audit-level=moderate
-```
-
-Smoke test production:
-
-```powershell
-Invoke-RestMethod https://meeting-api.locaith.com/health
-Invoke-WebRequest https://meeting.locaith.com -UseBasicParsing
-```
-
-## 8. Vận hành và giới hạn
-
-- Supabase RLS, index và quota transaction-safe là nền tảng phù hợp cho hàng nghìn tài khoản.
-- Khả năng tải thực tế phụ thuộc Google API quota, Supabase plan, băng thông audio và tài nguyên máy chạy backend.
-- Máy local là single point of failure; cần uptime monitor bên ngoài trước khi tăng ngân sách quảng cáo.
-- Gói nâng cấp hiện tạo `upgrade_requests` để xử lý thủ công. Thu tiền tự động cần PayOS/Stripe webhook.
-- Audio được gửi đến backend để phân tích và không được lưu mặc định.
-- Không commit `.env`, API key, service role, file credentials Cloudflare hoặc dữ liệu cuộc họp.
-
-## Cấu trúc chính
-
-```text
-src/app/               Next.js application
-src/lib/               Supabase client, API client, types
-backend/app/           FastAPI, Gemini, auth/quota gateway
-backend/tests/         Backend smoke tests
-supabase/schema.sql    Database schema, RLS, RPC quota/save
-scripts/               Setup, verify và production installer
-vercel.json            Vercel build configuration
-android/               Android scaffold cũ, không tham gia web production
-```
-
-## License
-
-Private commercial project — Locaith.
+Private commercial product.

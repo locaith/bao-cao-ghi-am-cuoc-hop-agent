@@ -1,8 +1,9 @@
 import type { SummaryResult } from "./types";
 
-const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:18771").replace(/\/$/, "");
+const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL || "").replace(/\/$/, "");
 
-export async function checkBackend(): Promise<boolean> {
+export async function checkServiceAvailability(): Promise<boolean> {
+  if (!API_BASE_URL) return false;
   try {
     const response = await fetch(`${API_BASE_URL}/health`, { signal: AbortSignal.timeout(3500) });
     return response.ok;
@@ -17,6 +18,7 @@ export async function summarizeMeeting(input: {
   audio?: string;
   mimeType?: string;
 }): Promise<SummaryResult> {
+  if (!API_BASE_URL) throw new Error("Dịch vụ AI chưa sẵn sàng.");
   const response = await fetch(`${API_BASE_URL}/api/v1/summarize`, {
     method: "POST",
     headers: {
