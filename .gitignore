@@ -19,9 +19,9 @@ local.properties
 .env.*.local
 .next
 node_modules
-backend/.venv
-backend/__pycache__
-backend/.pytest_cache
+backend/
+supabase/
+scripts/start-backend.ps1
 *.pyc
 *.tsbuildinfo
 logs
