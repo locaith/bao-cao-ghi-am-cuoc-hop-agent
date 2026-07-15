@@ -15,4 +15,14 @@
 .cxx
 local.properties
 .env
+.env.local
+.env.*.local
+.next
+node_modules
+backend/.venv
+backend/__pycache__
+backend/.pytest_cache
+*.pyc
+*.tsbuildinfo
+logs
 debug.keystore
