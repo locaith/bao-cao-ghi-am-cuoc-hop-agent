@@ -183,11 +183,10 @@ cd C:\locaith\pdf_ocr_backend
 .\cloudflared.exe tunnel --config .\cloudflared.convert.config.yml ingress rule https://meeting-api.locaith.com/health
 ```
 
-Nếu wildcard DNS chưa phủ hostname mới, thêm route một lần:
-
-```powershell
-.\cloudflared.exe tunnel route dns 4b964d57-2e3c-4d4f-b617-e8189f1098fb meeting-api.locaith.com
-```
+DNS wildcard hiện tại đã phủ `meeting-api.locaith.com`; không cần chạy thêm lệnh
+`cloudflared tunnel route dns`. Nếu thay đổi zone hoặc bỏ wildcard, hãy tạo bản ghi
+DNS trực tiếp trong Cloudflare Dashboard đúng zone `locaith.com`, rồi kiểm tra lại
+hostname trước khi restart tunnel.
 
 ## 7. Kiểm tra trước khi release
 
