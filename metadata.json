@@ -1,0 +1,10 @@
+{
+  "name": "Meeting AI Recorder & Planner",
+  "description": "Ghi âm cuộc họp, tóm tắt tự động bằng AI, quản lý danh sách công việc và đồng bộ lịch Google Calendar.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
